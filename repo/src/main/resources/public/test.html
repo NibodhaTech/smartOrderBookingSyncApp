@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.get("./bookingSyncAPIService/calculateAndPersistScore", function(data, status){
+            alert("Score Calculated and persisted Successfully " + "\nStatus: " + status);
+        });
+    });
+});
+</script>
+</head>
+<body>
+
+<button>Calculate and Persist Amenities Score</button>
+
+</body>
+</html>
