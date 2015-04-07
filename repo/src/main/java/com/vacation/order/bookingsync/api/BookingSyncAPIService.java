@@ -71,9 +71,9 @@ public class BookingSyncAPIService {
 				JSONObject enTobeWritten = new JSONObject();
 				JSONArray rentalTobeWritten = new JSONArray();
 				JSONObject rentalsTobeWritten = new JSONObject();
-				enTobeWritten.put("en", entry.getValue());
-				descriptionTobeWritten.put("description", enTobeWritten);
-				rentalTobeWritten.put(descriptionTobeWritten);
+				enTobeWritten.put("description_en", entry.getValue());
+			//	descriptionTobeWritten.put("description", enTobeWritten);
+				rentalTobeWritten.put(enTobeWritten);
 				rentalsTobeWritten.put("rentals", rentalTobeWritten);
 				String updateUrl=BOOKING_SYNC_UPDATE_RENTALS_URL.replaceAll(":rental_id", (String) entry.getKey());
 				System.out.println("put request url"+updateUrl);
