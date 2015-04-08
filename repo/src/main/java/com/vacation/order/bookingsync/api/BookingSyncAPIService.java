@@ -47,9 +47,9 @@ public class BookingSyncAPIService {
 			Properties properties = new Properties();
 			InputStream input = new FileInputStream(
 					"D:\\project\\smartOrderBookingSyncApp\\repo\\src\\main\\resources\\RentalAmenities.properties");
-			properties.load(input);
+		//	properties.load(input);
 
-			// properties.load(BookingSyncAPIService.class.getResourceAsStream("application1.properties"));
+			 properties.load(getClass().getClassLoader().getResourceAsStream("/resource/rentalAmenities.properties"));
 			for (String key : properties.stringPropertyNames()) {
 				String value = properties.getProperty(key);
 				System.out.println("Loading file" + key + value);
@@ -65,8 +65,7 @@ public class BookingSyncAPIService {
 
 	@RequestMapping(value = "/calculateAndPersistScore", method = RequestMethod.GET)
 	public void calculateAndPersistScore() {
-		int basicScore = 0, petScore = 0, otherScore = 0, disabledScore = 0, specialScore = 0;
-		int basicScore_counter = 0, petScore_counter = 0, disabledScore_counter = 0, specialScore_counter = 0,otherScore_counter = 0;
+	
 		String refreshedAccessToken = bookingSyncOAuthClient.refreshToken();
 		URI uri;
 		URI amenityURI;
@@ -99,6 +98,8 @@ public class BookingSyncAPIService {
 
 				
 				int amenityScore = 0;
+				int basicScore = 0, petScore = 0, otherScore = 0, disabledScore = 0, specialScore = 0;
+				int basicScore_counter = 0, petScore_counter = 0, disabledScore_counter = 0, specialScore_counter = 0,otherScore_counter = 0;
 				if (amenitiesArray != null && !amenitiesArray.isJsonNull()) {
 					for (JsonElement amenity : amenitiesArray.getAsJsonArray()) {
 						System.out.println("----Amenity123----"
@@ -159,7 +160,7 @@ public class BookingSyncAPIService {
 						+ amenityScore);
 				scoreMap.put(rentalId, description + " amenitiesScore: "
 						+ amenityScore);
-				amenityScore=0;
+				
 
 			}
 			System.out.println("After calculating amenities score");
