@@ -1,6 +1,7 @@
 package com.vacation.order.bookingsync.api;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URI;
@@ -41,25 +42,22 @@ public class BookingSyncAPIService {
 	@Autowired
 	BookingSyncOAuthClient bookingSyncOAuthClient;
 
-	public void LoadAmenities() {
-		try {
+	private void loadAmenities() throws Exception {
+		
 			/* Load the properties into HashMap */
 			Properties properties = new Properties();
-			InputStream input = new FileInputStream(
-					"D:\\project\\smartOrderBookingSyncApp\\repo\\src\\main\\resources\\RentalAmenities.properties");
-		//	properties.load(input);
+			//InputStream input = new FileInputStream("./resources/rentalAmenities.properties");
+			//properties.load(input);
 
-			 properties.load(getClass().getClassLoader().getResourceAsStream("/resource/rentalAmenities.properties"));
+			 properties.load(this.getClass().getClassLoader().getResourceAsStream("rentalAmenities.properties"));
 			for (String key : properties.stringPropertyNames()) {
 				String value = properties.getProperty(key);
-				System.out.println("Loading file" + key + value);
+				System.out.println("Loading file " + key + value);
 				propertiesMap.put(key, value);
 			}
-			input.close();
-		} catch (Exception e) {
-			System.out.println("Exception in loading properties file"
-					+ e.getMessage());
-		}
+			
+		//	input.close();
+		
 
 	}
 
@@ -73,7 +71,7 @@ public class BookingSyncAPIService {
 		Map<String, String> scoreMap = new HashMap<String, String>();
 		System.out.println("-----About to calculate-----");
 		try {
-			this.LoadAmenities();
+			this.loadAmenities();
 			uri = new URI(BOOKING_SYNC_GET_RENTALS_URL);
 			StringReader jsonReader = BookingSyncAPIUtils.getResponse(uri,
 					refreshedAccessToken);
