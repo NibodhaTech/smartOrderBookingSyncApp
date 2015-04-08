@@ -35,11 +35,11 @@ public class BookingSyncOAuthClient {
 	
 	private HttpServletResponse response;
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		BookingSyncOAuthClient bookingSyncOAuthClient=new BookingSyncOAuthClient();
 	//	bookingSyncOAuthClient.authorize();
 	//	bookingSyncOAuthClient.refreshToken("8d6ae93d721e79d6c5f617f055f704aa547b496931a0abb9d86e4c13de8adbb9");
-	}
+	}*/
 
 	@RequestMapping(value="/pingService", method=RequestMethod.GET)
 	public String pingService() {
