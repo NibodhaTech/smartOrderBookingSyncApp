@@ -33,11 +33,13 @@ public class BookingSyncAPIService {
 	public static final String BOOKING_SYNC_UPDATE_RENTALS_URL = "https://www.bookingsync.com/api/v3/rentals/:rental_id";
 	public static final String BOOKING_SYNC_GET_AMENITY_URL = "https://www.bookingsync.com/api/v3/amenities";
 	public static Map<String, String> propertiesMap = new HashMap<String, String>();
-	public static final int BASIC_AMENITY_SCORE = 10;
-	public static final int SPECIAL_AMENITY_SCORE = 30;
-	public static final int PET_FRIENDLY_AMENITY_SCORE = 20;
-	public static final int DISABLED_FACILITY_AMENITY_SCORE = 30;
-	public static final int OTHER_AMENITY_SCORE = 10;
+	/*
+	 * public static final int BASIC_AMENITY_SCORE = 10; public static final int
+	 * SPECIAL_AMENITY_SCORE = 30; public static final int
+	 * PET_FRIENDLY_AMENITY_SCORE = 20; public static final int
+	 * DISABLED_FACILITY_AMENITY_SCORE = 30; public static final int
+	 * OTHER_AMENITY_SCORE = 10;
+	 */
 	@Autowired
 	BookingSyncOAuthClient bookingSyncOAuthClient;
 
@@ -65,8 +67,7 @@ public class BookingSyncAPIService {
 
 	@RequestMapping(value = "/calculateAndPersistScore", method = RequestMethod.GET)
 	public void calculateAndPersistScore() {
-		int basicScore = 0, petScore = 0, otherScore = 0, disabledScore = 0, specialScore = 0;
-		int basicScore_counter = 0, petScore_counter = 0, disabledScore_counter = 0, specialScore_counter = 0,otherScore_counter = 0;
+
 		String refreshedAccessToken = bookingSyncOAuthClient.refreshToken();
 		URI uri;
 		URI amenityURI;
@@ -82,7 +83,6 @@ public class BookingSyncAPIService {
 			JsonObject rentalsObject = result.getAsJsonObject();
 			JsonArray rentalsArray = rentalsObject.getAsJsonArray("rentals");
 
-			
 			Iterator<JsonElement> rentalIterator = rentalsArray.iterator();
 			while (rentalIterator.hasNext()) {
 				JsonObject rentalObject = rentalIterator.next()
@@ -97,8 +97,9 @@ public class BookingSyncAPIService {
 				JsonArray amenitiesArray = linksObject
 						.getAsJsonArray("rentals_amenities");
 
-				
 				int amenityScore = 0;
+				int basicScore = 0, petScore = 0, otherScore = 0, disabledScore = 0, specialScore = 0, kitchenScore = 0, washerScore = 0, computerScore = 0, ambienceScore = 0,poolScore=0;
+				int basicScore_counter = 0, petScore_counter = 0, disabledScore_counter = 0, specialScore_counter = 0, otherScore_counter = 0, Kitchen_counter = 0, washer_counter = 0, computer_counter = 0, ambience_counter = 0,pool_counter = 0;
 				if (amenitiesArray != null && !amenitiesArray.isJsonNull()) {
 					for (JsonElement amenity : amenitiesArray.getAsJsonArray()) {
 						System.out.println("----Amenity123----"
@@ -108,58 +109,104 @@ public class BookingSyncAPIService {
 								.getAsString());
 						if (amenityCategory != null) {
 							if (amenityCategory.equalsIgnoreCase("basic")) {
-								basicScore = basicScore + 10;
+								basicScore = basicScore + 2;
 								basicScore_counter++;
 							} else if (amenityCategory
 									.equalsIgnoreCase("special")) {
-								specialScore = specialScore + 30;
+								specialScore = specialScore + 8;
 								specialScore_counter++;
-							} else if (amenityCategory.equalsIgnoreCase("pet")) {
-								petScore = petScore + 15;
+							} else if (amenityCategory.equalsIgnoreCase("pets")) {
+								petScore = petScore + 10;
 								petScore_counter++;
 							} else if (amenityCategory
 									.equalsIgnoreCase("disabled")) {
-								disabledScore = disabledScore + 30;
+								disabledScore = disabledScore + 5;
 								disabledScore_counter++;
-							} else {
-								otherScore = otherScore + 15;
+							} 
+							 else if (amenityCategory
+										.equalsIgnoreCase("kitchen")) {
+								 kitchenScore = kitchenScore + 28;
+								 Kitchen_counter++;
+								}
+							 else if (amenityCategory
+										.equalsIgnoreCase("ambience")) {
+								 ambienceScore = ambienceScore + 22;
+								 ambience_counter++;
+								}
+							 else if (amenityCategory
+										.equalsIgnoreCase("washer/dryer")) {
+								 washerScore = washerScore + 5;
+								 washer_counter++;
+								}
+							 else if (amenityCategory
+										.equalsIgnoreCase("computer/Internet")) {
+								 washerScore = washerScore + 5;
+								 washer_counter++;
+								}
+							 else if (amenityCategory
+										.equalsIgnoreCase("pool")) {
+								 poolScore = poolScore + 15;
+								 pool_counter++;
+								}
+							else {
+								otherScore = 0;
 								otherScore_counter++;
 							}
 						}
 					}
-					
-				if(basicScore_counter!=0){
-					basicScore=( basicScore / basicScore_counter);
-					amenityScore =amenityScore +basicScore;
-				}					
-				if(specialScore_counter!=0){
-					specialScore=(specialScore / specialScore_counter);
-					amenityScore =amenityScore +specialScore;
-				}
-					
-				 if(disabledScore_counter!=0){
-					 disabledScore=(disabledScore / disabledScore_counter);
-					 amenityScore =amenityScore +disabledScore;
-				 }
-					
-				 if(petScore_counter!=0){
-					 petScore=(petScore / petScore_counter);
-					 amenityScore =amenityScore +petScore;
-				 }
-					
-				if(otherScore_counter!=0){
-					otherScore =(otherScore / otherScore_counter);
-					amenityScore =amenityScore +otherScore;
-				}
-					
-				
+
+					if (basicScore_counter != 0) {
+						basicScore = (basicScore / basicScore_counter);
+						amenityScore = amenityScore + basicScore;
+					}
+					if (specialScore_counter != 0) {
+						specialScore = (specialScore / specialScore_counter);
+						amenityScore = amenityScore + specialScore;
+					}
+
+					if (disabledScore_counter != 0) {
+						disabledScore = (disabledScore / disabledScore_counter);
+						amenityScore = amenityScore + disabledScore;
+					}
+
+					if (petScore_counter != 0) {
+						petScore = (petScore / petScore_counter);
+						amenityScore = amenityScore + petScore;
+					}
+
+					if (otherScore_counter != 0) {
+						otherScore = (otherScore / otherScore_counter);
+						amenityScore = amenityScore + otherScore;
+					}
+
+					if (Kitchen_counter != 0) {
+						kitchenScore = (kitchenScore / Kitchen_counter);
+						amenityScore = amenityScore + kitchenScore;
+					}
+					if (washer_counter != 0) {
+						washerScore = (washerScore / washer_counter);
+						amenityScore = amenityScore + washerScore;
+					}
+					if (computer_counter != 0) {
+						computerScore = (computerScore / computer_counter);
+						amenityScore = amenityScore + computerScore;
+					}
+					if (ambience_counter != 0) {
+						ambienceScore = (ambienceScore / ambience_counter);
+						amenityScore = amenityScore + ambienceScore;
+					}
+					if (pool_counter != 0) {
+						poolScore = (poolScore / pool_counter);
+						amenityScore = amenityScore + poolScore;
+					}
 				}
 				System.out.println("Amenity Score 123 " + amenityScore);
-				System.out.println("Updating amenities score for rentalid  " + rentalId +" as "+description + " amenitiesScore: "
+				System.out.println("Updating amenities score for rentalid  "
+						+ rentalId + " as " + description + " amenitiesScore: "
 						+ amenityScore);
 				scoreMap.put(rentalId, description + " amenitiesScore: "
 						+ amenityScore);
-				amenityScore=0;
+				amenityScore = 0;
 
 			}
 			System.out.println("After calculating amenities score");
