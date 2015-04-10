@@ -1,0 +1,13 @@
+**/.svn/
+war/
+bin/
+.settings/
+.metadata/
+
+.gwt/
+
+gwt-unitCache/**
+*.log
+.gitignore/**
+eclipse_Workspace/**
+repo/target/**

@@ -48,7 +48,7 @@ public class BookingSyncAPIService {
 			/* Load the properties into HashMap */
 			Properties properties = new Properties();
 			InputStream input = new FileInputStream(
-					"D:\\project\\smartOrderBookingSyncApp\\repo\\src\\main\\resources\\RentalAmenities.properties");
+					"D:\\project\\smartOrderBookingSyncApp\\repo\\src\\main\\resources\\rentalAmenities.properties");
 			properties.load(input);
 
 			// properties.load(BookingSyncAPIService.class.getResourceAsStream("application1.properties"));
